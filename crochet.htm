@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+
+<!---
+C Daniel Vale 2020. All rights reserved.
+--->
+<title>Crochet Pattern Generator</title>
+<link rel="stylesheet" type="text/css" href="normalize.css">
+<link rel="stylesheet" type="text/css" href="crochet.css">
+
+<!--- Scripts -->
+<script src="crochet.js"></script>
+<script src="pattern.js"></script>
+
+</head>
+<body>
+<body onload="load()">
+
+<div id="cr-landing-page" class="cr-background">
+	<div id="banner">Crochet Pattern Generator</div>
+	<div id="main-panel">
+		<form name="test-pattern">
+			<div class="sub-panel">
+			Test Pattern: 
+			A larger test pattern will give more accuracy. <br>
+			<label>Width:</label> 	<br>
+				<span><input type="text" id="test-width-stiches" name="test-width-stitches" value="10"> stitches </span> <br>
+				<input type="text" id="test-width-measure" name="test-width-measure" value="58"> mm <br>
+			Length: <br>
+				<input type="text" id="test-length-rows" name="test-length-rows" value="10"> rows <br>
+				<input type="text" id="test-length-measure" name="test-length-measure" value="49"> mm <br>
+			Yarn used: <br>
+				<input type="text" id="test-yarn-used" name="test-yarn-used" value="4.35"> meters <br>
+				<input type="text" id="test-yarn-used-grams" name="test-yarn-used-grams" value="2.2"> grams
+			</div>
+		</form>
+		<form name="shape">
+			<div class="sub-panel">
+			<label for="shape">Chose a shape to make:</label> <br>
+			<select id="shape" name="shape" class="drop-down" value="sphere">
+				<option value="sphere">Sphere</option>
+				<!---
+				<option value="circle">Circle</option>
+				<option value="ovoid">Ovoid</option>
+				rectangle
+				oval
+				
+				* sphere
+				* ovoid
+				* cylinder (with different ends)
+				* pyramid (rectangle or triangle base)
+				--->
+			</select>
+			<label for="radius">radius:</radius> <br>
+			<input type="text" id="radius" name="radius" value="10"> cm <br>
+			<!---(centre to edge/circumference(across)--->
+			</div>
+		</form>
+		<div id="generate" class="cr-button" onclick="generate()"> Generate </div>
+		<div id="pattern" class="sub-panel">
+
+		<div id="row-1" class="pattern-row" progress="done" onclick="toggleRow(event)">
+		1 | 6 | magic circle 6 sc
+		</div>
+		<div id="row-2" class="pattern-row" progress="done" onclick="toggleRow(event)">
+		2 | 12 | inc in each stitch around
+		</div>
+
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,173 @@
+/* 
+C Daniel Vale 2020. All rights reserved.
+*/
+
+/* include padding and border in size */
+* {
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+:root {
+	--cr-background: #ded6c3; /* production = none , debug = block */
+	--cr-panel-background: #f2d68f;
+	--cr-border-color: #ccc;
+	--cr-text-color: #333399;
+	--cr-dev-background: #BBB;
+}
+
+body {
+	color: var(--cr-text-color);
+	background-color: var(--cr-background);
+	font-family: Arial, Helvetica, sans-serif;
+	/*overflow: auto;*/
+	/*
+	text-shadow: 
+		1px 1px #000,
+		1px 1px #000,
+		1px 1px #000,
+		1px 1px #000;
+		*/
+}
+
+
+
+ #banner { /* top of page banner */
+	/*background-image: linear-gradient(#555, #111);*/
+	background-color: var(--cr-background);
+	padding: 1em;
+	text-align: center;
+	letter-spacing: 3px;
+	font-size: 2.5em; 
+	
+	text-shadow: 
+		1.5px 1.5px #000,
+		1.5px -1.5px #000,
+		-1.5px 1.5px #000,
+		-1.5px -1.5px #000;	
+	
+}
+
+#main-panel {
+	/*position: fixed;*/
+	top: 10vh;
+	margin: auto;
+	width: max-content;
+	/* width : 60vw; */
+	/* max-width: 1028px; */
+	
+	/*height: 88vh;*/
+	
+	background-color: var(--cr-background);
+}
+
+.sub-panel {
+	position: relative;
+	margin: 1em;
+	padding: 1em;
+	width: max-content;
+	
+	background-color: var(--cr-panel-background);
+}
+
+.pattern-row {
+	margin: 1em;
+	border: 1px solid black;
+	padding: 1em;
+	background-color: var(--cr-dev-background);
+}
+
+.pattern-row[progress='done'] {
+	color: #888;
+}
+
+.pattern-row[progress='selected'] {
+	color: yellow;
+	background-color: blue;
+}
+
+.pattern-row[progress='none'] {
+
+}
+
+
+
+.cr-button {
+  
+  margin: 1em;
+  /*border: 1px solid #ccc;*/
+  /* create a 'raised' button */
+  border-bottom: 3px solid #444;
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-right: 3px solid #444;
+  
+  border-radius: 0px;
+  padding-top: 1.25em;
+  
+  background-color: #FFF;
+  /* float: left; */
+  display: inline-block;
+  
+  min-width: 122px;
+  max-width: auto;
+  min-height: 75px;
+  max-height: auto;
+  
+  text-align: center;
+  
+  cursor: pointer;
+  
+}
+.cr-button:hover {
+	background-color: #0B0 !important;
+}
+
+.cr-button:selected {
+	background-color: #00F !important;
+	
+}
+
+.drop-down {
+  margin-top: 0.25em;
+  margin-left: 3em;
+  margin-right: 0em;
+  margin-bottom: 0.125em;
+  
+  border: 1px solid var(--cr-border-color);
+  
+  padding-top: 0.625em;
+  padding-left: 1.125em;
+  padding-right: 1.125em;
+  padding-bottom: 0.5em;
+  
+  display: inline-block;
+}
+
+.drop-down:hover {
+	background-color: blue !important;
+	color: yellow;
+}
+
+input[type=text], input[type=password], input[type=select] {
+  /*width: 100%;*/
+  margin-top: 0.25em;
+  margin-left: 3em;
+  margin-right: 0em;
+  margin-bottom: 0.125em;
+  
+  border: 1px solid var(--cr-border-color);
+  
+  padding-top: 0.625em;
+  padding-left: 1.125em;
+  padding-right: 1.125em;
+  padding-bottom: 0.5em;
+  
+  display: inline-block;
+}
+
+input:hover {
+	background-color: blue !important;
+	color: yellow;
+}
+
