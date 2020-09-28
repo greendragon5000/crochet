@@ -135,13 +135,13 @@ function generate() {
             if (seamAdjust >= 1) {
                 for (let j = 1; j <= seamAdjust; j++)  {
 					step++;
-					targetStitch += stitchesPerStep;
+					targetStitch++;// += stitchesPerStep; // to prevent bunching, don't add the full stitchesPerStep
 					rowPattern.PushStitch("sc");
 					stitch++;
 				}
             }
 
-
+			
 
 			while (stitch < rowCircumfrenceInStitches) {
 				step++;
@@ -201,7 +201,7 @@ function generate() {
             if (seamAdjust >= 1) {
                 for (let j = 1; j <= seamAdjust; j++)  {
 					step++;
-					targetStitch += stitchesPerStep;
+					targetStitch++;// += stitchesPerStep; // to prevent bunching, don't add the full stitchesPerStep
 					rowPattern.PushStitch("sc");
 					stitch++;
 				}
@@ -226,7 +226,7 @@ function generate() {
 		
 		pattern += 
 			`<div id="row-${i}" class="pattern-row" progress="none" onclick="focusRow(event)">
-			${i} |`;
+			row ${i}: `;
 			
 		// pattern +=	" | " + rowCircumfrenceInStitches;
 		pattern += rowPattern.GetPattern() + br;

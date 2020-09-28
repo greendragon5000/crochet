@@ -24,7 +24,7 @@ class CPattern {
 			if (this.pattern != "") {
 				this.pattern += ", ";
 			}
-			this.pattern = this.pattern + " " + this.currentStitch;
+			this.pattern += this.currentStitch;
 			if (this.currentStitchCount > 1) {
 				this.pattern += " " + this.currentStitchCount + " (" + this.totalStitchCount + ")";
 			} else {
@@ -50,9 +50,9 @@ class CPattern {
 		
 		if (this.currentStitchCount > 0) {
 			if (this.pattern != "") {
-				this.pattern += ",";
+				this.pattern += ", ";
 			}
-			this.pattern += " " + this.currentStitch;
+			this.pattern += this.currentStitch;
 			if (this.currentStitchCount > 1) {
 				this.pattern += " " + this.currentStitchCount + " (" + this.totalStitchCount + ")";
 			} else {

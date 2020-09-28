@@ -20,7 +20,7 @@ body {
 	color: var(--cr-text-color);
 	background-color: var(--cr-background);
 	font-family: Arial, Helvetica, sans-serif;
-	/*overflow: auto;*/
+	overflow: auto;
 	/*
 	text-shadow: 
 		1px 1px #000,
@@ -82,8 +82,11 @@ body {
 }
 
 .pattern-row[progress='selected'] {
-	color: yellow;
-	background-color: blue;
+	color: #ffff00; /*yellow;*/
+	background-color: #030099; /*blue;*/
+	margin-top: 2em;
+	margin-bottom: 2em;
+	
 }
 
 .pattern-row[progress='none'] {
