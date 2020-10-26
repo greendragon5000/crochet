@@ -63,7 +63,13 @@ body {
 
 .sub-panel {
 	position: relative;
-	margin: 1em;
+	
+	margin-top: 1em;
+	margin-bottom: 1em;
+	margin-left: auto;
+	margin-right: auto;
+	
+	
 	padding: 1em;
 	width: max-content;
 	
@@ -96,8 +102,9 @@ body {
 
 
 .cr-button {
+  /* vertically centred */
+  margin: auto;
   
-  margin: 1em;
   /*border: 1px solid #ccc;*/
   /* create a 'raised' button */
   border-bottom: 3px solid #444;
@@ -108,12 +115,13 @@ body {
   border-radius: 0px;
   padding-top: 1.25em;
   
-  background-color: #FFF;
+  background-color: #4CAF50;
+
   /* float: left; */
-  display: inline-block;
+  /* display: inline-block; */
   
   min-width: 122px;
-  max-width: auto;
+  max-width: 500px;
   min-height: 75px;
   max-height: auto;
   
@@ -123,12 +131,18 @@ body {
   
 }
 .cr-button:hover {
-	background-color: #0B0 !important;
+	background-color: #3e8e41;
 }
 
 .cr-button:selected {
 	background-color: #00F !important;
 	
+}
+
+.cr-button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
 }
 
 .drop-down {
