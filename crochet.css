@@ -104,6 +104,7 @@ body {
 .cr-button {
   /* vertically centred */
   margin: auto;
+  margin-top: 1em;
   
   /*border: 1px solid #ccc;*/
   /* create a 'raised' button */

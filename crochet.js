@@ -5,7 +5,7 @@ C Daniel Vale 2020. All rights reserved.
 "use strict";
 
 const br = "<br>"
-var rows = 0;
+// var rows = 0;
 
 // Form data
 var testPatternWidthInStitches = NaN;
@@ -15,7 +15,6 @@ var testPatternLengthMeasure = NaN;
 var testPatternYarnUsed = NaN;
 var testPatternYarnUsedGrams = NaN;
 var shape = "";
-var shapeRadius = NaN;
 
 // calculate ratios from the test pattern
 var stitchesPerCm = NaN;
@@ -31,34 +30,20 @@ function load() {
 	// hide the pattern
 	let patternPanel = document.getElementById("pattern");
 	patternPanel.style.display = "none";
+	
+	// show settings for the default shape
+	showSettings();
 }
 
-function generateSphere() {
-	console.log("generate sphere");
-	
-	let radiusInCm = shapeRadius;
-	let diameterInCm = shapeRadius*2;
-	let circumfrenceInCm = 2.0 * Math.PI * radiusInCm;
 
-	console.log("circumfrence: " + circumfrenceInCm + " cm");
+// a generalisation of the ellipse/ellipsoid/cone functions
+function generateRoundThings(patternStart, startStitches, lastStartRowStitches, rows, targetCircumfrence, getRowCircumfrenceInCm) {
+	console.log("generate round thing");
 	
-	// figure the number of rows (to make one half of a circumfrence)
-	rows = Math.round(circumfrenceInCm / 2 * rowsPerCm);
-	console.log("rows: " + rows);
+	let pattern = patternStart;
 	
-	
-	let pattern = `
-<div id="row-1" class="pattern-row" progress="none" onclick="focusRow(event)">
-row 1: magic circle 6 sc (6)
-</div>
-<div id="row-2" class="pattern-row" progress="none" onclick="focusRow(event)">
-row 2: inc in each stitch around (12)
-</div>
-`;
-	
-	
-	let previousRowStitches = 12;
-	let totalStitches = 18;
+	let previousRowStitches = lastStartRowStitches;
+	let totalStitches = startStitches;
 	let targetIncrementStitches = 0; // two stitches into one previous row stitch
 	let targetSingleCrochetStitches = 0;
 	let targetDecrementStitches = 0; // one stitch into two previous row stitches
@@ -70,14 +55,15 @@ row 2: inc in each stitch around (12)
 	let seamSpreadPrevRow = previousRowStitches * 2;
 	let seamAdjust = 0; // this is the number of sc to insert at the start of the row
 	let prevSeamAdjust = 0;
-	for (let i = 3; i < rows; i++) {
+	let startRow = 2;
+	if (startStitches > 6) startRow = 3;
+	for (let i = startRow; i < rows; i++) {
 		let targetStitch = 0;
 		let step = 0;
 		let stitch = 0;
 		// determine the circumfrence of this row
-		let progressRatio = i / rows; // how far through are we?
-		let progressAngle = progressRatio * Math.PI; // (express progress as a portion of Pi)
-		let rowCircumfrenceInCm = circumfrenceInCm * Math.sin(progressAngle);
+		let rowCircumfrenceInCm = getRowCircumfrenceInCm(i, rows, targetCircumfrence);
+		//console.log("row "+i+" circumfrence "+rowCircumfrenceInCm+" cm");
 		let rowCircumfrenceInStitches = Math.round(rowCircumfrenceInCm * stitchesPerCm);
 		totalStitches += rowCircumfrenceInStitches
 		// show row and stitches in this row
@@ -89,8 +75,6 @@ row 2: inc in each stitch around (12)
 			targetSingleCrochetStitches = previousRowStitches - targetIncrementStitches;
 			targetSteps = targetIncrementStitches + targetSingleCrochetStitches;
 			stitchesPerStep = rowCircumfrenceInStitches / targetSteps;
-			
-			
 			
             // to prevent darting, rotate the inc/dec over three rows
 			seamSpread = targetSteps / targetIncrementStitches;
@@ -233,155 +217,27 @@ row 2: inc in each stitch around (12)
 	pattern += "Estimated yarn required: " + Math.round(estimateYarnRequiredGrams) + " g" + br;
 	
 	return pattern;
+	
 }
 
-function generateCircle() {
-	console.log("generate circle");
+function getSphereRowCircumfrenceInCm(row, rows, circumfrenceInCm) {
+	let progressRatio = row / rows; // how far through are we?
+	let progressAngle = progressRatio * Math.PI; // (express progress as a portion of Pi)
+	let rowCircumfrenceInCm = circumfrenceInCm * Math.sin(progressAngle);
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	let radiusInCm = shapeRadius;
-	let diameterInCm = shapeRadius*2;
-	let circumfrenceInCm = 2.0 * Math.PI * radiusInCm;
+	return rowCircumfrenceInCm;
+}
 
-	console.log("circumfrence: " + circumfrenceInCm + " cm");
+function getCircleRowCircumfrenceInCm(row, rows, circumfrenceInCm) {
+	let progressRatio = row / rows; // how far through are we?
+	let rowCircumfrenceInCm = circumfrenceInCm * progressRatio; // don't need to recalc from radius as radius is liniarly proportional to circumfrence.
 	
-	// figure the number of rows 
-	rows = Math.round(radiusInCm * rowsPerCm);
-	console.log("rows: " + rows);
-	
-	
-	let pattern = `
-<div id="row-1" class="pattern-row" progress="none" onclick="focusRow(event)">
-row 1: magic circle 6 sc (6)
-</div>
-<div id="row-2" class="pattern-row" progress="none" onclick="focusRow(event)">
-row 2: inc in each stitch around (12)
-</div>
-`;
-	
-	
-	let previousRowStitches = 12;
-	let totalStitches = 18;
-	let targetIncrementStitches = 0; // two stitches into one previous row stitch
-	let targetSingleCrochetStitches = 0;
-	let targetSteps = 0; // a double crochet (inc) counts as one step and two stitches
-	let stitchesPerStep = 1; // >1 to grow, <1 to shrink
-	// A 'seam' or 'dart' occurs where the double or decrementing stitches run from row to row
-	// to prevent this we manage the distance between these stitches so they never appear together.
-	let seamSpread = 9999; // no seam until calculated. This is the ratio of steps to doubles (inc/dec).
-	let seamSpreadPrevRow = previousRowStitches * 2;
-	let seamAdjust = 0; // this is the number of sc to insert at the start of the row
-	let prevSeamAdjust = 0;
-	for (let i = 3; i <= rows; i++) {
-		let targetStitch = 0;
-		let step = 0;
-		let stitch = 0;
-		// determine the circumfrence of this row
-		let progressRatio = i / rows; // how far through are we?
-		let rowRadiusInCm = progressRatio * radiusInCm;
-		console.log("row "+i+": radius "+rowRadiusInCm+" cm");
-		let rowCircumfrenceInCm = 2 * Math.PI * rowRadiusInCm;
-		let rowCircumfrenceInStitches = Math.round(rowCircumfrenceInCm * stitchesPerCm);
-		totalStitches += rowCircumfrenceInStitches
-		
-		
-		
-		// show row and stitches in this row
-		let rowPattern = new CPattern();
+	return rowCircumfrenceInCm;
+}
 
-		// incrementing - we only increment for a circle
-		targetIncrementStitches = rowCircumfrenceInStitches - previousRowStitches;
-		targetSingleCrochetStitches = previousRowStitches - targetIncrementStitches;
-		targetSteps = targetIncrementStitches + targetSingleCrochetStitches;
-		stitchesPerStep = rowCircumfrenceInStitches / targetSteps;
-		
-		
-		
-		// to prevent darting, rotate the inc/dec over three rows
-		seamSpread = targetSteps / targetIncrementStitches;
-		if (seamSpread >= 3) {
-			seamAdjust = Math.round((seamSpread / 3) * (i % 3));
-		} else {
-			// or over two rows if every other stitch is in/dec 
-			seamAdjust = Math.round((seamSpread / 2) * (i % 2));
-		}
-		
-		// prevent accidental alignment caused by a combination of rotation and a change in stitchSpread (eg when going  from 3 steps to 2 steps near the circumference)
-		// this should only occure near the ends, when the number of stitches in the row is small
-		
-		if (seamAdjust == prevSeamAdjust) {
-			if (seamAdjust > 1) {
-				seamAdjust--;
-			} else {
-				seamAdjust++;
-			}
-		}
-		
-		// prevent a seam adjustment > the number of sc in the row
-		if (seamAdjust > targetSingleCrochetStitches) {
-			seamAdjust = targetSingleCrochetStitches;
-		}
-		
-		// do the seam adjustment
-		// pattern += " % " + Math.round(10*seamSpread)/10 + " % " + Math.round(10*seamAdjust)/10 + " % ";
-		if (seamAdjust >= 1) {
-			for (let j = 1; j <= seamAdjust; j++)  {
-				step++;
-				targetStitch++;// += stitchesPerStep; // to prevent bunching, don't add the full stitchesPerStep
-				rowPattern.PushStitch("sc");
-				stitch++;
-			}
-		}
 
-		
-
-		while (stitch < rowCircumfrenceInStitches) {
-			step++;
-			targetStitch += stitchesPerStep;
-			if (targetStitch > stitch + 1.01) {
-				stitch += 2;
-				rowPattern.PushStitch("inc");
-			} else {
-				stitch++;
-				rowPattern.PushStitch("sc");
-			}
-		}			
-
-		
-		pattern += 
-			`<div id="row-${i}" class="pattern-row" progress="none" onclick="focusRow(event)">
-			row ${i}: `;
-			
-		// pattern +=	" | " + rowCircumfrenceInStitches;
-		pattern += rowPattern.GetPattern() + br;
-		pattern += "</div>";		
-		
-		// setup for next row
-		previousRowStitches = rowCircumfrenceInStitches;
-		seamSpreadPrevRow = seamSpread;
-		prevSeamAdjust = seamAdjust;
-	}
-	pattern += "total stitches: " + totalStitches + br;
-	
-	
-	
-	
-	// estimate total yarn
-	let estimateYarnRequired = totalStitches * testPatternYarnPerStitch;
-	let estimateYarnRequiredGrams = totalStitches / testPatternTotalStitches * testPatternYarnUsedGrams
-	pattern += "Estimated yarn required: " + Math.round(estimateYarnRequired) + " m" + br;
-	pattern += "Estimated yarn required: " + Math.round(estimateYarnRequiredGrams) + " g" + br;
-	
-	return pattern;
+function getConeRowCircumfrenceInCm(row, rows, circumfrenceInCm) {
+	return row / rows * circumfrenceInCm;
 }
 
 function generate() {
@@ -416,16 +272,111 @@ function generate() {
 	// get the target shape details
 	// for now, only a sphere. TODO: other shapes
 	shape = document.forms["shape"]["shape"].value;
-	shapeRadius = document.forms["shape"]["radius"].value;
 	
 	// generate the pattern
 	let pattern = "";
+
+	let patternStart = "";
+	let startStitches = NaN;
+	let lastStartRowStitches = NaN;
+	let rows = NaN;
+	let circumfrenceInCm = NaN;
+	
 	switch (shape) {
 		case "sphere":
-			pattern = generateSphere();
+			//pattern = generateSphere();
+			patternStart = `
+<div id="row-1" class="pattern-row" progress="none" onclick="focusRow(event)">
+row 1: magic circle 6 sc (6)
+</div>
+<div id="row-2" class="pattern-row" progress="none" onclick="focusRow(event)">
+row 2: inc in each stitch around (12)
+</div>
+`;				
+			startStitches = 18;
+			lastStartRowStitches = 12;
+
+			// figure the number of rows (to make one side, ie half of the circumfrence)
+			let sphereRadiusInCm = document.forms["shape"]["sphere-radius"].value;
+			circumfrenceInCm = 2.0 * Math.PI * sphereRadiusInCm;
+			console.log("circumfrence: " + circumfrenceInCm + " cm");
+			rows = Math.round(circumfrenceInCm / 2 * rowsPerCm);
+			
+			pattern = generateRoundThings(patternStart, startStitches, lastStartRowStitches, rows, circumfrenceInCm, getSphereRowCircumfrenceInCm); // NB: we can re-use the getSphereRowCircumfrenceInCm from a sphere here, as the progress ratio in that function takes care of the distortion factor 
 			break;
 		case "circle":
-			pattern = generateCircle();
+			// pattern = generateCircle();
+			patternStart = `
+<div id="row-1" class="pattern-row" progress="none" onclick="focusRow(event)">
+row 1: magic circle 6 sc (6)
+</div>
+<div id="row-2" class="pattern-row" progress="none" onclick="focusRow(event)">
+row 2: inc in each stitch around (12)
+</div>
+`;				
+			startStitches = 18;
+			lastStartRowStitches = 12;
+
+			// figure the number of rows (to make one side, ie half of the circumfrence)
+			let circleRadius = document.forms["shape"]["circle-radius"].value;
+			rows = circleRadius * rowsPerCm;
+
+			circumfrenceInCm = 2.0 * Math.PI * circleRadius;
+			console.log("circumfrence: " + circumfrenceInCm + " cm");
+			
+			pattern = generateRoundThings(patternStart, startStitches, lastStartRowStitches, rows, circumfrenceInCm, getCircleRowCircumfrenceInCm);
+			break;
+		case "cone":
+			// pattern = generateCone();
+			
+
+			// figure the number of rows (to make one side)
+			// for a cone, this is the slant distance, ie sqrt(height^2 + (base-radius)^2)
+			let baseRadius = document.forms["shape"]["cone-base-radius"].value;
+			let coneHeight = document.forms["shape"]["cone-height"].value;
+			let sideLength = Math.sqrt(baseRadius * baseRadius + (coneHeight * coneHeight));
+			rows = sideLength * rowsPerCm;
+
+			circumfrenceInCm = 2.0 * Math.PI * baseRadius;
+			console.log("circumfrence: " + circumfrenceInCm + " cm");
+			
+			let coneRow2Stitches = 2 / rows * circumfrenceInCm * stitchesPerCm;
+			let coneMagicCircleStitches = Math.max(3, Math.ceil( coneRow2Stitches / 2 ));
+			
+			patternStart = `
+<div id="row-1" class="pattern-row" progress="none" onclick="focusRow(event)">
+row 1: magic circle `;
+			patternStart += coneMagicCircleStitches+" sc ("+coneMagicCircleStitches+")</div>";
+			startStitches = coneMagicCircleStitches;
+			lastStartRowStitches = coneMagicCircleStitches;
+			
+			pattern = generateRoundThings(patternStart, startStitches, lastStartRowStitches, rows, circumfrenceInCm, getConeRowCircumfrenceInCm);
+			break;
+		case "ellipsoid":
+			patternStart = `
+<div id="row-1" class="pattern-row" progress="none" onclick="focusRow(event)">
+row 1: magic circle 6 sc (6)
+</div>
+<div id="row-2" class="pattern-row" progress="none" onclick="focusRow(event)">
+row 2: inc in each stitch around (12)
+</div>
+`;				
+			startStitches = 18;
+			lastStartRowStitches = 12;
+
+			// figure the number of rows (to make one side, ie half of the circumfrence)
+			// for an ellipse the circumfrence is 2 x π x √((a^2 + b^2) ÷ 2)
+			// NB: this is the circumfrence that goes the long way around the ends
+			let ellipsoidLength = document.forms["shape"]["ellipsoid-length"].value;
+			let ellipsoidWidth = document.forms["shape"]["ellipsoid-width"].value;
+			let ellipseCircumfrence = 2 * Math.PI * Math.sqrt((ellipsoidLength * ellipsoidLength + ellipsoidWidth * ellipsoidWidth) / 2);
+			rows = Math.round(ellipseCircumfrence / 2 * rowsPerCm);
+			
+			// This is the circumfrence around the middle of the ellipsoid
+			circumfrenceInCm = Math.PI * ellipsoidWidth;
+			console.log("circumfrence: " + circumfrenceInCm + " cm");
+			
+			pattern = generateRoundThings(patternStart, startStitches, lastStartRowStitches, rows, circumfrenceInCm, getSphereRowCircumfrenceInCm);			
 			break;
 		default: 
 			pattern = "Error: shape not recognised.";
@@ -437,6 +388,24 @@ function generate() {
 	patternPanel.style.display = "block";	
 }
 
+
+
+// show the shape settings for the currently selected shape
+function showSettings() {
+	// get the shape
+	shape = document.forms["shape"]["shape"].value;
+	
+	// hide the settings
+	document.getElementById("sphere-settings").style.display = "none";
+	document.getElementById("ellipsoid-settings").style.display = "none";
+	document.getElementById("circle-settings").style.display = "none";
+	document.getElementById("ellipse-settings").style.display = "none";
+	document.getElementById("cone-settings").style.display = "none";
+
+	// show the settigns div for the currently selected shape
+	document.getElementById(shape + "-settings").style.display = "block";
+	
+}
 
 // select the row we are working on to be 'selected'
 // all previous rows become 'done' and all future rows become 'none'

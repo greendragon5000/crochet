@@ -39,26 +39,50 @@ C Daniel Vale 2020. All rights reserved.
 		<form name="shape">
 			<div class="sub-panel">
 			<label for="shape">Chose a shape to make:</label> <br>
-			<select id="shape" name="shape" class="drop-down" value="sphere">
+			<select id="shape" name="shape" class="drop-down" value="sphere" onchange="showSettings()">
 				<option value="sphere">Sphere (ball)</option>
+				<option value="ellipsoid">Spheroid/Ellipsoid (stretched/squashed ball)</option>
 				<option value="circle">Circle (flat)</option>
+				<!--<option value="ellipse">Ellipse (stretched/squased circle)</option>  work in progress-->
 				<option value="cone">Cone</option>
 				<!---
-				<option value="circle">Circle</option>
-				<option value="ovoid">Ovoid</option>
 				rectangle
 				oval
+				triangle?
 				
-				* sphere
-				* ovoid
 				* cylinder (with different ends)
 				* pyramid (rectangle or triangle base)
 				--->
 			</select>
 			<br>
-			<label for="radius">radius:</radius> <br>
-			<input type="text" id="radius" name="radius" value="10.0"> cm <br>
-			<!---(centre to edge/circumference(across)--->
+			<div id="sphere-settings">
+				<label for="sphere-radius">sphere radius:</label> <br>
+				<input type="text" id="sphere-radius" name="sphere-radius" value="10.0"> cm <br>			
+			</div>
+			<div id="ellipsoid-settings">
+				<label for="ellipsoid-length">length/height (start to finish, through the middle):</label> <br>
+				<input type="text" id="ellipsoid-length" name="ellipsoid-length" value="10.0"> cm <br>	
+				<label for="ellipsoid-width">width (diameter of middle row):</label> <br>
+				<input type="text" id="ellipsoid-width" name="ellipsoid-width" value="7.0"> cm <br>	
+			</div>
+			<div id="circle-settings"
+				<label for="circle-radius">circle radius:</label> <br>
+				<input type="text" id="circle-radius" name="circle-radius" value="10.0"> cm <br>
+			</div>
+			<div id="ellipse-settings">
+				<label for="ellipse-length">length (major axis):</label> <br>
+				<input type="text" id="ellipse-length" name="ellipse-length" value="10.0"> cm <br>	
+				<label for="ellipse-width">width (minor axis):</label> <br>
+				<input type="text" id="ellipse-width" name="ellipse-width" value="10.0"> cm <br>	
+			</div>
+			<div id="cone-settings">
+				<label for="cone-height">cone height:</label> <br>
+				<input type="text" id="cone-height" name="cone-height" value="10.0"> cm <br>				
+				
+				<label for="cone-base-radius">radius at base:</label> <br>
+				<input type="text" id="cone-base-radius" name="cone-base-radius" value="5.0"> cm <br>
+				
+				Note: To make the base for the cone, build a circle with the same radius.
 			</div>
 		</form>
 		<div id="generate" class="cr-button" onclick="generate()"> Generate </div>
